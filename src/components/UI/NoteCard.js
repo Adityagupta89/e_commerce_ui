@@ -26,6 +26,13 @@ const NoteCard = (props) => {
   const [option, setOption] = useState(1);
   const dispatch = useDispatch();
 
+  let image
+  if(props.product.product_image?.length===1)
+   image = ["http://localhost:3020/" + props.product.product_image];
+  else{
+    image='data:image/png;base64,' + props.product.product_image[0];
+  }
+
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: props.product, size: option }));
   };
@@ -59,7 +66,7 @@ const NoteCard = (props) => {
         component="img"
         height="300"
         className="img"
-        image={"http://localhost:3020/" + props.product.product_image}
+        image={image}
         alt="Paella dish"
       />
       <CardContent

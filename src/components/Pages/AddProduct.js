@@ -30,7 +30,7 @@ const AddProduct = (props) => {
   const param = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  console.log(file);
+
   useEffect(() => {
     if (props.page === "edit") {
       fetch(`http://localhost:3020/api/product/${param.id}`, {
@@ -182,7 +182,7 @@ const AddProduct = (props) => {
         <Stack sx={{ justifyContent: "space-evenly" }}>
           {props.page === "add" ||
           (props.page === "edit" && product.weight !== 0) ? (
-            <form onSubmit={submitHandler}>
+            <form onSubmit={submitHandler} enctype="multipart/form-data"   >
               <Grid>
                 <Typography variant="h5">Name</Typography>
                 <TextField

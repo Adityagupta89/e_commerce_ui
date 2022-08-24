@@ -22,6 +22,7 @@ const Home = (props) => {
   let [page, setPage] = useState(1);
   const admin = useSelector((state) => state.auth.isAdmin);
   const [maxPage, setMaxpage] = useState(0);
+  const [emptySearch,setEmptySearch]=useState(false)
   // const _DATA = usePagination(products, PER_PAGE);
 
   const handleChangePagination = (e, p) => {
@@ -63,7 +64,7 @@ const Home = (props) => {
         setProducts(res.data);
         setMaxpage(res.maxPage);
       });
-  }, [page, maxPage, category]);
+  }, [page, maxPage, category,emptySearch]);
 
   useEffect(() => {
     const searchAPI = () => {
@@ -77,11 +78,14 @@ const Home = (props) => {
         }
       )
         .then((res) => res.json())
-        .then((res) => setProducts(res.data));
+        .then((res) => {
+          if(props.searchData.length===0)
+          setEmptySearch((prev)=>!prev)
+          setProducts(res.data)});
     };
     //  setTimeout(()=>{
     searchAPI();
-    //  },1000)
+    //  },1000) 
   }, [props.searchData]);
 
   return (
