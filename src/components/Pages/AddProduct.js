@@ -13,6 +13,11 @@ import { useParams } from "react-router-dom";
 import Header from "../UI/Header";
 import ToastCSS from "../../helper/ToastMessage";
 import ToastContainers from "../../helper/ToastContainer";
+import PropTypes from "prop-types";
+import LinearProgress from "@mui/material/LinearProgress";
+import classes from './AddProduct.module.css'
+import Box from "@mui/material/Box";
+import { upload } from "@testing-library/user-event/dist/upload";
 
 const AddProduct = (props) => {
   const [product, setProduct] = useState({
@@ -32,6 +37,10 @@ const AddProduct = (props) => {
   const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState("");
   const [files, setFiles] = useState();
+  const [progressInfos, setProgressInfos] = useState([]);
+  const [message, setMessage] = useState([]);
+  // const [fileInfos, setFileInfos] = useState([]);
+  const [progress, setProgress] = React.useState(0);
   const param = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -146,6 +155,29 @@ const AddProduct = (props) => {
         }
       })
       .catch((err) => toast(err.response.data.msg));
+  };
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress === 100 ?100: prevProgress + 10));
+    }, 400);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  const uploadFiles = (event) => {
+    event.preventDefault();
+    console.log(files)
+    let _progressInfos = [];
+    let message_info = [];
+    for (let i = 0; i < files?.length; i++) {
+      _progressInfos.push({ percentage: 100, fileName: files[i].name });
+      message_info.push("Uploaded the file successfully :" + files[i].name);
+    }
+    setProgress(0)
+    setMessage(message_info);
+    setProgressInfos(_progressInfos);
   };
 
   return (
@@ -279,22 +311,56 @@ const AddProduct = (props) => {
                 </Typography>
               </Grid>
               <Grid>
-                <Typography variant="h5">Image Upload</Typography>
-                <input
-                  type="file"
-                  style={{ marginTop: ".5rem" }}
-                  onChange={(event) => {
-                    setFiles(event.target.files);
-                  }}
-                  multiple
-                  required={props.page === "add"}
-                />
-                <Typography
-                  variant="subtitle1"
-                  sx={{ mt: ".5rem", color: grey[700] }}
-                >
-                  Upload for Product Image
+                <Typography variant="h5">
+                  React upload multiple Files
                 </Typography>
+                <div>
+                  {progressInfos &&
+                    progressInfos.map((progressInfo, index) => (
+                      <div className="mb-2" key={index}>
+                        <span>{progressInfo.fileName}</span>
+                        <Box sx={{ width: "100%",margin:'.5rem 0' }}>
+                          <LinearProgressWithLabel value={progress} sx={{height:'20px',borderRadius:"10px"}} />
+                        </Box>
+                      </div>
+                    ))}
+                  <div className="row my-3">
+                    <div className="col-8">
+                      <label className="btn btn-default p-0">
+                        <input type="file" multiple onChange={event => setFiles(event.target.files)} />
+                      </label>
+                    </div>
+                    <div style={{margin:'1rem 0'}}>
+                      <button
+                        className="btn btn-success btn-sm"
+                        disabled={!files}
+                        onClick={uploadFiles}
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </div>
+                  {message.length > 0 && progress===100 && (
+                    <div  className={classes.message}>
+                      <ul className={classes.ul}>
+                        {message.map((item, i) => {
+                          return <li key={i}>{item}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="card">
+                    {/* <div className="card-header">List of Files</div> */}
+                    <ul className="list-group list-group-flush">
+                      {/* {files &&
+                        files?.map((file, index) => (
+                          <li className="list-group-item" key={index}>
+                            <a href={file.url}>{file.name}</a>
+                          </li>
+                        ))} */}
+                    </ul>
+                  </div>
+                </div>
               </Grid>
               <Button
                 type="Submit"
@@ -313,5 +379,26 @@ const AddProduct = (props) => {
     </>
   );
 };
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
+LinearProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 export default AddProduct;
