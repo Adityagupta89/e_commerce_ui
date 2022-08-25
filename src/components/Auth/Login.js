@@ -9,31 +9,28 @@ import { useNavigate } from "react-router-dom";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import { useDispatch } from "react-redux";
 import { authAction } from "../redux/authSlice";
-import { toast} from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ToastCSS from "../../helper/ToastMessage";
 import ToastContainers from "../../helper/ToastContainer";
 import EmailForm from "../UI/EmailForm";
-
-const paperStyling = { width: "20vw", margin: "10rem auto", padding: "20px" };
 
 const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
   const SubmitHandler = (event) => {
     event.preventDefault();
-    const data = {
+    const loginCredential = {
       email: username,
       password: password,
     };
-    login(data);
+    login(loginCredential);
   };
 
   const login = async (data) => {
-    await fetch("http://localhost:3020/api/auth", {
+    await fetch(`${process.env.REACT_APP_AUTH_URL}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -42,9 +39,8 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res.status === 400) {
-         toast.info(res.msg,ToastCSS)
+          toast.info(res.msg, ToastCSS);
         }
         if (res.status === 200) {
           localStorage.setItem("token", res.data);
@@ -57,14 +53,14 @@ const Login = () => {
             dispatch(authAction.login());
             navigate("/");
           }, 2000);
-          toast.info(res.msg,ToastCSS);
+          toast.info(res.msg, ToastCSS);
         }
       });
   };
 
   return (
     <>
-      <ToastContainers/>
+      <ToastContainers />
       <Grid>
         <Paper elevation={20} style={paperStyling}>
           <Grid align="center">
@@ -121,5 +117,7 @@ const Login = () => {
     </>
   );
 };
+
+const paperStyling = { width: "20vw", margin: "10rem auto", padding: "20px" };
 
 export default Login;

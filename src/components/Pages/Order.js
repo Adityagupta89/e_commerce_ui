@@ -52,7 +52,7 @@ const Order = (props) => {
   const token = localStorage.getItem("token");
   useEffect(() => {
     const allProduct = () => {
-      fetch(`http://localhost:3020/api/order/`, {
+      fetch(`${process.env.REACT_APP_ORDER_URL}`, {
         headers: {
           "x-auth-token": token,
         },
@@ -61,7 +61,7 @@ const Order = (props) => {
         .then((res) => setOrderData(res));
     };
     const filterProduct = () => {
-      fetch(`http://localhost:3020/api/order/${user_id}`, {
+      fetch(`${process.env.REACT_APP_ORDER_URL}${user_id}`, {
         headers: {
           "x-auth-token": token,
         },

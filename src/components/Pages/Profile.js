@@ -123,7 +123,7 @@ const Profile = (props) => {
         const formData = new FormData();
         formData.append("profileImage", file);
         await axios
-          .put(`http://localhost:3020/api/user/${user_id}`, formData)
+          .put(`${process.env.REACT_APP_USER_URL}${user_id}`, formData)
           .then((res) => {
             if (res.data.status === 400) toast.info(res.data.msg, ToastCSS);
             if (res.data.status === 200) {
@@ -139,7 +139,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (user_id) {
-      fetch(`http://localhost:3020/api/user/${user_id}`)
+      fetch(`${process.env.REACT_APP_USER_URL}${user_id}`)
         .then((res) => res.json())
         .then((res) => {
           setUser(res.data);

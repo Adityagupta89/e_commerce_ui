@@ -24,18 +24,18 @@ const EmailForm = () => {
     setOpen(false);
   };
   const handleSubmit = () => {
-    const data = {
+    const emailObject = {
       email: email,
     };
     axios
-      .post(`http://localhost:3020/api/mail/`, data)
+      .post(`${process.env.REACT_APP_MAIL_URL}`, emailObject)
       .then((res) => {
-        if (res.status === 400) toast.info(res.data.msg,ToastCSS);
+        if (res.status === 400) toast.info(res.data.msg, ToastCSS);
         if (res.status === 200) {
           setTimeout(() => {
             setOpen(false);
           }, 2000);
-          toast.info(res.data.msg,ToastCSS);
+          toast.info(res.data.msg, ToastCSS);
         }
       })
       .catch((err) => {

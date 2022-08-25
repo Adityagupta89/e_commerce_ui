@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastCSS from "../../helper/ToastMessage";
 import ToastContainers from "../../helper/ToastContainer";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const OrderForm = (props) => {
@@ -35,7 +35,7 @@ const OrderForm = (props) => {
 
   useEffect(() => {
     if (open) {
-      fetch(`http://localhost:3020/api/user/${user_id}`)
+      fetch(`${process.env.REACT_APP_USER_URL}${user_id}`)
         .then((res) => res.json())
         .then((res) =>
           setUser((prev) => {
@@ -77,12 +77,12 @@ const OrderForm = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.status === 400) toast.info(res.msg,ToastCSS);
+        if (res.status === 400) toast.info(res.msg, ToastCSS);
         if (res.status === 201) {
           setTimeout(() => {
             navigate("/");
           }, 3000);
-          toast.info(res.msg,ToastCSS);
+          toast.info(res.msg, ToastCSS);
           setOpen(false);
         }
       })

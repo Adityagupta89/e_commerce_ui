@@ -30,7 +30,7 @@ const AddressForm = (props) => {
 
   const addressSubmitHandler = (e) => {
     e.preventDefault();
-    const data = {
+    const Addressdata = {
       email: props.email,
       address1: address1,
       address2: address2,
@@ -38,13 +38,13 @@ const AddressForm = (props) => {
       pincode: pincode,
       landmark: landmark,
     };
-    updateAddress(data);
+    updateAddress(Addressdata);
   };
 
-  const updateAddress = async (data) => {
-    await fetch("http://localhost:3020/api/user/updateAddress", {
+  const updateAddress = async (Addressdata) => {
+    await fetch(`${process.env.REACT_APP_USER_URL}updateAddress`, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(Addressdata),
       headers: {
         "Content-Type": "application/json",
         "x-auth-token": token,
@@ -53,8 +53,7 @@ const AddressForm = (props) => {
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
-        if (res.status === 400)
-          toast.info(res.msg,ToastCSS);
+        if (res.status === 400) toast.info(res.msg, ToastCSS);
         if (res.status === 200) {
           props.update(true);
           toast.info(res.msg, ToastCSS);
@@ -66,8 +65,7 @@ const AddressForm = (props) => {
 
   return (
     <div>
-      <ToastContainers
-      />
+      <ToastContainers />
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Add Address
       </Button>

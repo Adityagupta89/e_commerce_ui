@@ -20,7 +20,7 @@ const Home = (props) => {
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("mobile");
   let [page, setPage] = useState(1);
-  const token=localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const admin = useSelector((state) => state.auth.isAdmin);
   const [maxPage, setMaxpage] = useState(0);
   const [emptySearch, setEmptySearch] = useState(false);
@@ -34,6 +34,7 @@ const Home = (props) => {
   const handleChange = (event) => {
     setSort(event.target.value);
   };
+
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
     setPage(1);
@@ -51,11 +52,11 @@ const Home = (props) => {
   }, [sort, products]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_PRODUCT_URL}pagination?page=${page}&category=${category}`,
+    fetch(
+      `${process.env.REACT_APP_PRODUCT_URL}pagination?page=${page}&category=${category}`,
       {
         headers: {
-          "x-auth-token":
-            token,
+          "x-auth-token": token,
         },
       }
     )
@@ -64,7 +65,7 @@ const Home = (props) => {
         setProducts(res.data);
         setMaxpage(res.maxPage);
       });
-  }, [page, maxPage, category, emptySearch]);
+  }, [page, maxPage, token, category, emptySearch]);
 
   useEffect(() => {
     const searchAPI = () => {
@@ -72,8 +73,7 @@ const Home = (props) => {
         `${process.env.REACT_APP_PRODUCT_URL}search?search=${props.searchData}`,
         {
           headers: {
-            "x-auth-token":
-              token
+            "x-auth-token": token,
           },
         }
       )
@@ -85,7 +85,7 @@ const Home = (props) => {
     };
 
     searchAPI();
-  }, [props.searchData]);
+  }, [props.searchData, token]);
 
   return (
     <>

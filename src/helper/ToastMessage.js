@@ -1,4 +1,4 @@
-export default  {
+const css= {
     position: "top-center",
     autoClose: 2000,
     hideProgressBar: false,
@@ -6,3 +6,4 @@ export default  {
     pauseOnHover: true,
     draggable: true,
   }
+export default css

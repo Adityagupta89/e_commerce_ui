@@ -13,7 +13,6 @@ import ToastContainers from "../../helper/ToastContainer";
 import axios from "axios";
 import { useState } from "react";
 
-
 const PasswordForm = (props) => {
   const [open, setOpen] = React.useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -33,23 +32,23 @@ const PasswordForm = (props) => {
       newpassword: newPassword,
     };
     axios
-      .put(`http://localhost:3020/api/user/changePassword`, data)
+      .put(`${process.env.REACT_APP_USER_URL}changePassword`, data)
       .then((res) => {
-        if (res.status === 400) toast.info(res.data.msg,ToastCSS);
-        if (res.status === 404) toast.info(res.data.msg,ToastCSS);
+        if (res.status === 400) toast.info(res.data.msg, ToastCSS);
+        if (res.status === 404) toast.info(res.data.msg, ToastCSS);
         if (res.status === 200) {
           setTimeout(() => {
             setOpen(false);
           }, 2000);
-          toast.info(res.data.msg,ToastCSS);
+          toast.info(res.data.msg, ToastCSS);
         }
       })
-      .catch((err) => toast.info(err.response.data.msg,ToastCSS));
+      .catch((err) => toast.info(err.response.data.msg, ToastCSS));
   };
 
   return (
     <div>
-      <ToastContainers/>
+      <ToastContainers />
       <Button
         variant="contained"
         sx={{ mt: ".7rem" }}

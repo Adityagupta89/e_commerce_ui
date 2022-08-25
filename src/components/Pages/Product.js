@@ -14,31 +14,30 @@ import Header from "../UI/Header";
 const Product = (props) => {
   const param = useParams();
   const dispatch = useDispatch();
-  const token=localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const [product, setProduct] = useState({});
   let image;
   if (product.product_image?.length === 1)
-    image = ["http://localhost:3020/" + product.product_image];
+    image = [`${process.env.REACT_APP_URL}${product.product_image}`];
   else {
     image = product.product_image?.map(
       (image) => "data:image/png;base64," + image
     );
   }
-  console.log(image);
+
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: product }));
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3020/api/product/${param.id}`, {
+    fetch(`${process.env.REACT_APP_PRODUCT_URL}${param.id}`, {
       headers: {
-        "x-auth-token":
-          token,
+        "x-auth-token": token,
       },
     })
       .then((res) => res.json())
       .then((res) => setProduct(res));
-  }, [param.id]);
+  }, [param.id, token]);
 
   return (
     <>

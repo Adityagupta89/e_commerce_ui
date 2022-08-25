@@ -15,9 +15,8 @@ import ToastCSS from "../../helper/ToastMessage";
 import ToastContainers from "../../helper/ToastContainer";
 import PropTypes from "prop-types";
 import LinearProgress from "@mui/material/LinearProgress";
-import classes from './AddProduct.module.css'
+import classes from "./AddProduct.module.css";
 import Box from "@mui/material/Box";
-import { upload } from "@testing-library/user-event/dist/upload";
 
 const AddProduct = (props) => {
   const [product, setProduct] = useState({
@@ -47,7 +46,7 @@ const AddProduct = (props) => {
 
   useEffect(() => {
     if (props.page === "edit") {
-      fetch(`http://localhost:3020/api/product/${param.id}`, {
+      fetch(`${process.env.REACT_APP_PRODUCT_URL}${param.id}`, {
         headers: {
           "x-auth-token": token,
         },
@@ -55,12 +54,10 @@ const AddProduct = (props) => {
         .then((res) => res.json())
         .then((res) => setProduct(res));
     }
-  }, [props.page, param.id, token]);
+  }, [ param.id, token,props.page]);
 
   const submitHandler = (e) => {
-    console.log("Adityar  ");
     e.preventDefault();
-
     const data = new FormData();
     if (files)
       for (let i = 0; i < files.length; i++) {
@@ -72,17 +69,13 @@ const AddProduct = (props) => {
     if (description) data.append("description", description);
     if (category) data.append("category", category);
     if (quantity) data.append("quantity", quantity);
-
-    {
-    }
-
     if (props.page === "add") createProduct(data);
     else productUpdate(data);
   };
 
   const createProduct = async (data) => {
     await axios
-      .post("http://localhost:3020/api/product", data, {
+      .post(`${process.env.REACT_APP_PRODUCT_URL}`, data, {
         headers: {
           "x-auth-token": token,
         },
@@ -104,7 +97,7 @@ const AddProduct = (props) => {
 
   const productUpdate = async (data) => {
     axios
-      .put(`http://localhost:3020/api/product/edit/${param.id}`, data, {
+      .put(`${process.env.REACT_APP_PRODUCT_URL}edit/${param.id}`, data, {
         headers: {
           "x-auth-token": token,
         },
@@ -159,7 +152,9 @@ const AddProduct = (props) => {
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress === 100 ?100: prevProgress + 10));
+      setProgress((prevProgress) =>
+        prevProgress === 100 ? 100 : prevProgress + 10
+      );
     }, 400);
     return () => {
       clearInterval(timer);
@@ -168,14 +163,14 @@ const AddProduct = (props) => {
 
   const uploadFiles = (event) => {
     event.preventDefault();
-    console.log(files)
+    console.log(files);
     let _progressInfos = [];
     let message_info = [];
     for (let i = 0; i < files?.length; i++) {
       _progressInfos.push({ percentage: 100, fileName: files[i].name });
       message_info.push("Uploaded the file successfully :" + files[i].name);
     }
-    setProgress(0)
+    setProgress(0);
     setMessage(message_info);
     setProgressInfos(_progressInfos);
   };
@@ -319,18 +314,26 @@ const AddProduct = (props) => {
                     progressInfos.map((progressInfo, index) => (
                       <div className="mb-2" key={index}>
                         <span>{progressInfo.fileName}</span>
-                        <Box sx={{ width: "100%",margin:'.5rem 0' }}>
-                          <LinearProgressWithLabel value={progress} sx={{height:'20px',borderRadius:"10px"}} />
+                        <Box sx={{ width: "100%", margin: ".5rem 0" }}>
+                          <LinearProgressWithLabel
+                            value={progress}
+                            sx={{ height: "20px", borderRadius: "10px" }}
+                          />
                         </Box>
                       </div>
                     ))}
                   <div className="row my-3">
                     <div className="col-8">
                       <label className="btn btn-default p-0">
-                        <input type="file" multiple onChange={event => setFiles(event.target.files)} />
+                        <input
+                          type="file"
+                          multiple
+                          required
+                          onChange={(event) => setFiles(event.target.files)}
+                        />
                       </label>
                     </div>
-                    <div style={{margin:'1rem 0'}}>
+                    <div style={{ margin: "1rem 0" }}>
                       <button
                         className="btn btn-success btn-sm"
                         disabled={!files}
@@ -340,8 +343,8 @@ const AddProduct = (props) => {
                       </button>
                     </div>
                   </div>
-                  {message.length > 0 && progress===100 && (
-                    <div  className={classes.message}>
+                  {message.length > 0 && progress === 100 && (
+                    <div className={classes.message}>
                       <ul className={classes.ul}>
                         {message.map((item, i) => {
                           return <li key={i}>{item}</li>;

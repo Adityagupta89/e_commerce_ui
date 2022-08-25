@@ -31,10 +31,13 @@ const Cart = (props) => {
   );
 
   const orderHandler = () => {
-    if (login !== "true") {
+    console.log("Aditya")
+    console.log(typeof login , login)
+    if (login !== true) {
       navigate("/login");
       return;
     }
+    
     try {
       products.forEach((element) => {
         createOrder(element);
@@ -69,7 +72,7 @@ const Cart = (props) => {
 
   useEffect(() => {
     if (user_id !== null)
-      fetch(`http://localhost:3020/api/user/${user_id}`)
+      fetch(`${process.env.REACT_APP_USER_URL}${user_id}`)
         .then((res) => res.json())
         .then((res) => {
           if (res.status === 200) {

@@ -41,14 +41,15 @@ const Signup = () => {
       city: city,
       landmark: landmark,
       pincode: +pincode,
-      profileImage:file,
+      profileImage: file,
       dob: date,
     };
     const formData = new FormData();
-    for(let key in formObjectData )
+    for (let key in formObjectData) 
     formData.append(key, formObjectData[key]);
+    
     await axios
-      .post("http://localhost:3020/api/user", formData)
+      .post(`${process.env.REACT_APP_USER_URL}`, formData)
       .then((res) => {
         console.log(res);
         if (res.data.status === 400) toast.info(res.data.msg, ToastCSS);
@@ -239,7 +240,6 @@ const Signup = () => {
 
 const paperStyling = {
   width: "25vw",
-  // height: "70vh",
   margin: "3rem auto",
   padding: "2rem",
 };
