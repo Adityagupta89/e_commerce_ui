@@ -10,19 +10,21 @@ import OrderForm from "../UI/OrderForm";
 import { useDispatch } from "react-redux";
 import { cartAction } from "../redux/cartSlice";
 import Header from "../UI/Header";
-import classes from './Product.module.css'
 
 const Product = (props) => {
   const param = useParams();
   const dispatch = useDispatch();
+  const token=localStorage.getItem('token');
   const [product, setProduct] = useState({});
-  let image
-  if(product.product_image?.length===1)
-   image = ["http://localhost:3020/" + product.product_image];
-  else{
-  image=product.product_image?.map(image=>'data:image/png;base64,'+image)
+  let image;
+  if (product.product_image?.length === 1)
+    image = ["http://localhost:3020/" + product.product_image];
+  else {
+    image = product.product_image?.map(
+      (image) => "data:image/png;base64," + image
+    );
   }
-  console.log(image)
+  console.log(image);
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: product }));
   };
@@ -31,7 +33,7 @@ const Product = (props) => {
     fetch(`http://localhost:3020/api/product/${param.id}`, {
       headers: {
         "x-auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+          token,
       },
     })
       .then((res) => res.json())
@@ -43,22 +45,20 @@ const Product = (props) => {
       <Header search={props.search} />
       <Grid container sx={{ mt: 4 }}>
         <Grid item xs={12} sm={6} sx={{ width: "48%" }}>
-        <Slider {...settings}>
-          {image?.map(img =>
-          
-          <Box sx={{ p: "3em" }}>
-            <img
-              alt="Not Found"
-              src={img}
-              style={{
-                width: product.category ,
-                height: "80vh",
-                backgroundSize: "cover",
-              }}
-            />
-            
-          </Box>
-          )}
+          <Slider {...settings}>
+            {image?.map((img) => (
+              <Box sx={{ p: "3em" }}>
+                <img
+                  alt="Not Found"
+                  src={img}
+                  style={{
+                    width: product.category,
+                    height: "80vh",
+                    backgroundSize: "cover",
+                  }}
+                />
+              </Box>
+            ))}
           </Slider>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -119,29 +119,27 @@ function RightArrow(props) {
   return (
     <div
       className={className}
-      style={{ ...style, display: "block", background: "black",color:"black",right:'50px' }}
+      style={{
+        ...style,
+        display: "block",
+        background: "black",
+        color: "black",
+        right: "50px",
+      }}
       onClick={onClick}
     />
   );
 }
-function LeftArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", background: "black",color:"white",left:'35px' }}
-      onClick={onClick}
-    />
-  );
-}
+
 const settings = {
   dots: true,
   infinite: true,
   speed: 500,
   slidesToShow: 1,
   slidesToScroll: 1,
-  nextArrow:<RightArrow/>,
-  prevArrow:<LeftArrow/>
+  nextArrow: <RightArrow />,
+  // prevArrow:<LeftArrow/>,
+  appendDots: (dots) => <ul style={{ bottom: "80px" }}>{dots}</ul>,
 };
 
 export default Product;

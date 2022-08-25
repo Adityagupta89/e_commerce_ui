@@ -9,8 +9,10 @@ import { Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { TextField } from "@mui/material";
 import { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import axios from "axios";
 import { Button } from "@mui/material";
 import { useState } from "react";
@@ -59,7 +61,6 @@ const Profile = (props) => {
   const handleAddressChange = (e) => {
     const id = e.target.id;
     const name = e.target.name;
-
     setUser((prev) => {
       const address_info = prev.address_info.map((address) => {
         if (address._id === id)
@@ -124,13 +125,13 @@ const Profile = (props) => {
         await axios
           .put(`http://localhost:3020/api/user/${user_id}`, formData)
           .then((res) => {
-            if (res.data.status === 400) toast(res.data.msg);
+            if (res.data.status === 400) toast.info(res.data.msg, ToastCSS);
             if (res.data.status === 200) {
               setUser(res.data.data);
-              toast("Image Updated");
+              toast.info("Image Updated", ToastCSS);
             }
           })
-          .catch((err) => toast(err.response.data.msg));
+          .catch((err) => toast.info(err.response.data.msg, ToastCSS));
       }
     };
     updateFile();
@@ -152,52 +153,19 @@ const Profile = (props) => {
     axios
       .put(`http://localhost:3020/api/user/${user_id}`, user)
       .then((res) => {
-        if (res.status === 400)
-          toast.error(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-        if (res.status === 404)
-          toast.error(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+        if (res.status === 400) toast.info(res.data.msg, ToastCSS);
+        if (res.status === 404) toast.info(res.data.msg, ToastCSS);
         if (res.status === 200) {
-          toast.info(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "colored",
-          });
+          toast.info(res.data.msg, ToastCSS);
         }
       })
-      .catch((err) =>
-        toast.error(err.response.data.msg, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-      );
+      .catch((err) => toast.info(err.response.data.msg, ToastCSS));
   };
 
   return (
     <>
       <Header search={props.search} />
-      <ToastContainer />
+      <ToastContainers />
       <Box sx={{ height: "20vh", backgroundColor: "#e5e8ed" }}>
         <Stack
           spacing={2}

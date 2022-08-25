@@ -1,6 +1,5 @@
-@media only screen  and (max-width: 500px) {
-    .login{
-        width: 50vw;
-    }
-    
+@media only screen and (max-width: 500px) {
+  .login {
+    width: 50vw;
   }
+}

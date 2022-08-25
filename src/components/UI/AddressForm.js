@@ -6,7 +6,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddressForm = (props) => {
@@ -52,24 +54,10 @@ const AddressForm = (props) => {
       .then((res) => {
         console.log(res);
         if (res.status === 400)
-          toast.error(res.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+          toast.info(res.msg,ToastCSS);
         if (res.status === 200) {
           props.update(true);
-          toast.success(res.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+          toast.info(res.msg, ToastCSS);
           setOpen(false);
         }
       })
@@ -78,16 +66,7 @@ const AddressForm = (props) => {
 
   return (
     <div>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
+      <ToastContainers
       />
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Add Address

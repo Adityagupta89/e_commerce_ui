@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { authAction } from "../redux/authSlice";
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import EmailForm from "../UI/EmailForm";
 
 const paperStyling = { width: "20vw", margin: "10rem auto", padding: "20px" };
@@ -19,7 +21,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
   const SubmitHandler = (event) => {
@@ -43,14 +44,7 @@ const Login = () => {
       .then((res) => {
         console.log(res);
         if (res.status === 400) {
-          toast.info(res.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+         toast.info(res.msg,ToastCSS)
         }
         if (res.status === 200) {
           localStorage.setItem("token", res.data);
@@ -63,33 +57,14 @@ const Login = () => {
             dispatch(authAction.login());
             navigate("/");
           }, 2000);
-          toast.info(res.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "colored",
-          });
+          toast.info(res.msg,ToastCSS);
         }
       });
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <ToastContainers/>
       <Grid>
         <Paper elevation={20} style={paperStyling}>
           <Grid align="center">

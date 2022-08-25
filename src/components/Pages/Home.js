@@ -12,18 +12,18 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
 import classes from "./Home.module.css";
+
 import { useMemo } from "react";
 import Header from "../UI/Header";
-
 const Home = (props) => {
   const [products, setProducts] = useState([]);
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("mobile");
   let [page, setPage] = useState(1);
+  const token=localStorage.getItem('token');
   const admin = useSelector((state) => state.auth.isAdmin);
   const [maxPage, setMaxpage] = useState(0);
-  const [emptySearch,setEmptySearch]=useState(false)
-  // const _DATA = usePagination(products, PER_PAGE);
+  const [emptySearch, setEmptySearch] = useState(false);
 
   const handleChangePagination = (e, p) => {
     if (p === 0) return;
@@ -36,6 +36,7 @@ const Home = (props) => {
   };
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    setPage(1);
   };
 
   useMemo(() => {
@@ -50,12 +51,11 @@ const Home = (props) => {
   }, [sort, products]);
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3020/api/product/pagination?page=${page}&category=${category}`,
+    fetch(`${process.env.REACT_APP_PRODUCT_URL}pagination?page=${page}&category=${category}`,
       {
         headers: {
           "x-auth-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+            token,
         },
       }
     )
@@ -64,28 +64,27 @@ const Home = (props) => {
         setProducts(res.data);
         setMaxpage(res.maxPage);
       });
-  }, [page, maxPage, category,emptySearch]);
+  }, [page, maxPage, category, emptySearch]);
 
   useEffect(() => {
     const searchAPI = () => {
       fetch(
-        `http://localhost:3020/api/product/search?search=${props.searchData}`,
+        `${process.env.REACT_APP_PRODUCT_URL}search?search=${props.searchData}`,
         {
           headers: {
             "x-auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+              token
           },
         }
       )
         .then((res) => res.json())
         .then((res) => {
-          if(props.searchData.length===0)
-          setEmptySearch((prev)=>!prev)
-          setProducts(res.data)});
+          if (props.searchData.length === 0) setEmptySearch((prev) => !prev);
+          setProducts(res.data);
+        });
     };
-    //  setTimeout(()=>{
+
     searchAPI();
-    //  },1000) 
   }, [props.searchData]);
 
   return (

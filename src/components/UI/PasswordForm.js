@@ -6,10 +6,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import axios from "axios";
 import { useState } from "react";
+
 
 const PasswordForm = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -32,21 +35,21 @@ const PasswordForm = (props) => {
     axios
       .put(`http://localhost:3020/api/user/changePassword`, data)
       .then((res) => {
-        if (res.status === 400) toast(res.data.msg);
-        if (res.status === 404) toast(res.data.msg);
+        if (res.status === 400) toast.info(res.data.msg,ToastCSS);
+        if (res.status === 404) toast.info(res.data.msg,ToastCSS);
         if (res.status === 200) {
           setTimeout(() => {
             setOpen(false);
           }, 2000);
-          toast(res.data.msg);
+          toast.info(res.data.msg,ToastCSS);
         }
       })
-      .catch((err) => toast(err.response.data.msg));
+      .catch((err) => toast.info(err.response.data.msg,ToastCSS));
   };
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainers/>
       <Button
         variant="contained"
         sx={{ mt: ".7rem" }}

@@ -7,7 +7,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const OrderForm = (props) => {
@@ -75,12 +77,12 @@ const OrderForm = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.status === 400) toast(res.msg);
+        if (res.status === 400) toast.info(res.msg,ToastCSS);
         if (res.status === 201) {
           setTimeout(() => {
             navigate("/");
           }, 3000);
-          toast(res.msg);
+          toast.info(res.msg,ToastCSS);
           setOpen(false);
         }
       })
@@ -89,7 +91,7 @@ const OrderForm = (props) => {
 
   return (
     <div>
-      <ToastContainer
+      <ToastContainers
         position="top-center"
         autoClose={2000}
         hideProgressBar={false}

@@ -3,11 +3,16 @@ import { Typography, Grid, Stack, TextField, Button } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { FormControl } from "@mui/material";
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "../UI/Header";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 
 const AddProduct = (props) => {
   const [product, setProduct] = useState({
@@ -26,7 +31,7 @@ const AddProduct = (props) => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [file, setFile] = useState();
+  const [files, setFiles] = useState();
   const param = useParams();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -46,11 +51,11 @@ const AddProduct = (props) => {
   const submitHandler = (e) => {
     console.log("Adityar  ");
     e.preventDefault();
-    
+
     const data = new FormData();
-    if (file)
-      for (let i = 0; i < file.length; i++) {
-        data.append("file2", file[i]);
+    if (files)
+      for (let i = 0; i < files.length; i++) {
+        data.append("file2", files[i]);
       }
     if (name) data.append("name", name);
     if (price) data.append("price", price);
@@ -58,6 +63,9 @@ const AddProduct = (props) => {
     if (description) data.append("description", description);
     if (category) data.append("category", category);
     if (quantity) data.append("quantity", quantity);
+
+    {
+    }
 
     if (props.page === "add") createProduct(data);
     else productUpdate(data);
@@ -72,24 +80,17 @@ const AddProduct = (props) => {
       })
       .then((res) => {
         console.log(res);
-        if (res.status === 400) toast(res.data.msg);
-        if (res.status === 401) toast(res.data.msg);
-        if (res.status === 403) toast(res.data.msg);
+        if (res.status === 400) toast.info(res.data.msg, ToastCSS);
+        if (res.status === 401) toast.info(res.data.msg, ToastCSS);
+        if (res.status === 403) toast.info(res.data.msg, ToastCSS);
         if (res.status === 201) {
           setTimeout(() => {
             navigate("/");
           }, 2000);
-          toast.info(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+          toast.info(res.data.msg, ToastCSS);
         }
       })
-      .catch((err) => toast(err.response.data.msg));
+      .catch((err) => toast.info(err.response.data.msg, ToastCSS));
   };
 
   const productUpdate = async (data) => {
@@ -150,17 +151,7 @@ const AddProduct = (props) => {
   return (
     <>
       <Header search={props.search} />
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-      />
+      <ToastContainers />
       <Typography variant="h3" sx={{ textAlign: "center", mt: "1rem" }}>
         {props.page === "add" ? "Add new Product" : "Edit new Product"}{" "}
       </Typography>
@@ -182,7 +173,7 @@ const AddProduct = (props) => {
         <Stack sx={{ justifyContent: "space-evenly" }}>
           {props.page === "add" ||
           (props.page === "edit" && product.weight !== 0) ? (
-            <form onSubmit={submitHandler} enctype="multipart/form-data"   >
+            <form onSubmit={submitHandler} enctype="multipart/form-data">
               <Grid>
                 <Typography variant="h5">Name</Typography>
                 <TextField
@@ -253,19 +244,22 @@ const AddProduct = (props) => {
               </Grid>
               <Grid>
                 <Typography variant="h5">Category</Typography>
-                <TextField
-                  id="outlined-basic"
-                  sx={{ width: "50%" }}
-                  defaultValue={
-                    props.page === "edit" ? product?.category : category
-                  }
-                  required={props.page === "add"}
-                  variant="outlined"
-                  onChange={(event) => setCategory(event.target.value)}
-                />
-                <Typography variant="subtitle1" sx={{ color: grey[700] }}>
-                  Category for Product Item
-                </Typography>
+                <FormControl sx={{ marginTop: "10px", width: "50%" }} fullWidth>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    defaultValue={
+                      props.page === "edit" ? product?.category : category
+                    }
+                    onChange={(event) => setCategory(event.target.value)}
+                    required={props.page === "add"}
+                    fullWidth
+                  >
+                    <MenuItem value="mobile">Mobile</MenuItem>
+                    <MenuItem value="laptop">Laptop</MenuItem>
+                    <MenuItem value="tablet">Tablet</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid>
                 <Typography variant="h5">Quantity</Typography>
@@ -290,7 +284,7 @@ const AddProduct = (props) => {
                   type="file"
                   style={{ marginTop: ".5rem" }}
                   onChange={(event) => {
-                    setFile(event.target.files);
+                    setFiles(event.target.files);
                   }}
                   multiple
                   required={props.page === "add"}

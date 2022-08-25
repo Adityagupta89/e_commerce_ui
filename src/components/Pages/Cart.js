@@ -6,9 +6,11 @@ import { Button } from "@mui/material";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import classes from "./Cart.module.css";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Divider } from "@mui/material";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import { cartAction } from "../redux/cartSlice";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../UI/Header";
@@ -38,27 +40,13 @@ const Cart = (props) => {
         createOrder(element);
       });
     } catch (err) {
-      toast.error(err.response.data.msg, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.info(err.response.data.msg, ToastCSS);
     }
     setTimeout(() => {
       dispatch(cartAction.clearCart());
       navigate("/");
     }, 2000);
-    toast.info("Order Place", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    toast.info("Order Place", ToastCSS);
   };
 
   const createOrder = async (product) => {
@@ -69,7 +57,7 @@ const Cart = (props) => {
       address_info: userAddress[0],
     };
 
-    await fetch("http://localhost:3020/api/order", {
+    await fetch(`${process.env.REACT_APP_ORDER_URL}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -98,17 +86,7 @@ const Cart = (props) => {
   return (
     <div className={classes.body}>
       <Header search={props.search} />
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-      />
+      <ToastContainers />
       <Container sx={{ width: "100vw" }}>
         {products.length === 0 && empty_Cart}
         {products.length > 0 && (

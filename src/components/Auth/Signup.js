@@ -8,15 +8,10 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import ToastCSS from "../../helper/ToastMessage";
+import ToastContainers from "../../helper/ToastContainer";
 import "react-toastify/dist/ReactToastify.css";
-
-const paperStyling = {
-  width: "25vw",
-  // height: "70vh",
-  margin: "3rem auto",
-  padding: "2rem",
-};
 
 const Signup = () => {
   const [firstname, setFirstName] = useState("");
@@ -35,79 +30,41 @@ const Signup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const data = {
+    const formObjectData = {
       first_name: firstname,
       last_name: lastname,
       email: email,
       password: password,
       mobile_no: mob,
-      address_info: {
-        address1: address1,
-        address2: address2,
-        city: city,
-        landmark: landmark,
-        pincode: +pincode,
-      },
+      address1: address1,
+      address2: address2,
+      city: city,
+      landmark: landmark,
+      pincode: +pincode,
+      profileImage:file,
       dob: date,
     };
-
     const formData = new FormData();
-    formData.append("profileImage", file);
-    formData.append("first_name", data.first_name);
-    formData.append("last_name", data.last_name);
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("mobile_no", data.mobile_no);
-    formData.append("address1", data.address_info.address1);
-    formData.append("address2", data.address_info.address2);
-    formData.append("city", data.address_info.city);
-    formData.append("landmark", data.address_info.landmark);
-    formData.append("pincode", data.address_info.pincode);
-    formData.append("dob", data.dob);
-
+    for(let key in formObjectData )
+    formData.append(key, formObjectData[key]);
     await axios
       .post("http://localhost:3020/api/user", formData)
       .then((res) => {
         console.log(res);
-        if (res.data.status === 400)
-          toast.error(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+        if (res.data.status === 400) toast.info(res.data.msg, ToastCSS);
         if (res.data.status === 201) {
           setTimeout(() => {
-            navigate("/");
+            navigate("/login");
           }, 2000);
-          toast.success(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+          toast.info(res.data.msg, ToastCSS);
         }
       })
-      .catch((err) => toast(err.response.data.msg));
+      .catch((err) => toast.info(err.response.data.msg, ToastCSS));
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-      />
+      <ToastContainers />
       <Grid>
         <Paper elevation={10} style={paperStyling}>
           <Grid align="center" sx={{ mb: "1rem" }}>
@@ -278,6 +235,13 @@ const Signup = () => {
       </Grid>
     </>
   );
+};
+
+const paperStyling = {
+  width: "25vw",
+  // height: "70vh",
+  margin: "3rem auto",
+  padding: "2rem",
 };
 
 export default Signup;
