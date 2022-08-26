@@ -1,0 +1,18 @@
+@media only screen  and (max-width: 500px) {
+.sort{
+    display:none;
+}
+.box{
+    justify-content: center;
+}
+}
+.sort{
+    margin-top: 3rem;
+}
+.category{
+    margin-top: 3rem;
+    margin-right:2rem;
+}
+.card{
+    max-width: 1450px;
+}
