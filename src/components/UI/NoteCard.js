@@ -108,6 +108,7 @@ const NoteCard = (props) => {
           sx={{ backgroundColor: "#4c93d8" }}
           variant="contained"
           onClick={addProductHandler}
+          disabled={admin==='true'}
         >
           Add to Cart
         </Button>

@@ -9,11 +9,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ToastCSS from "../../helper/ToastMessage";
 import ToastContainers from "../../helper/ToastContainer";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const OrderForm = (props) => {
   const navigate = useNavigate();
+  const admin = useSelector((state) => state.auth.isAdmin);
   const [open, setOpen] = React.useState(false);
   const [address1, setAddress1] = useState();
   const [address2, setAddress2] = useState();
@@ -109,6 +111,7 @@ const OrderForm = (props) => {
           fontSize: props.value ? "0.875rem" : "1.3rem",
         }}
         onClick={handleClickOpen}
+        disabled={admin==='true'}
       >
         Buy Now
       </Button>

@@ -25,6 +25,7 @@ const Header = (props) => {
   const user_id = localStorage.getItem("user_id");
   const numberOfCartItems = products.length;
   const login = useSelector((state) => state.auth.isLogin);
+  const admin=useSelector((state) => state.auth.isAdmin);
   const buttonHandle = () => {
     dispatch(authAction.admin({ value: false }));
     dispatch(authAction.logout());
@@ -106,7 +107,7 @@ const Header = (props) => {
                 />
               </Link>
             )}
-            <div className={classes.chip}>
+           {admin==='false' && <div className={classes.chip}>
               <Box
                 sx={{
                   backgroundColor: "#165ba0",
@@ -141,7 +142,8 @@ const Header = (props) => {
                   />
                 </Link>
               </Box>
-            </div>
+           
+            </div> }
             {login && (
               <LogoutIcon
                 onClick={buttonHandle}

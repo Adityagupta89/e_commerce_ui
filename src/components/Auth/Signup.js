@@ -14,35 +14,41 @@ import ToastContainers from "../../helper/ToastContainer";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [password, setPassword] = useState("");
   const [file, setFile] = useState();
-  const [email, setEmail] = useState("");
-  const [mob, setMob] = useState();
-  const [address1, setAddress1] = useState("");
-  const [address2, setAddress2] = useState("");
-  const [landmark, setLandmark] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState();
-  const [date, setDate] = useState("");
+  const [user,setUser]=useState({
+    firstname:'',
+    lastname:'',
+    password:'',
+    email:'',
+    mob:0,
+    address1:'',
+    address2:'',
+    landmark:'',
+    city:'',
+    pincode:0,
+    date:''
+  })
   const navigate = useNavigate();
+   
+  const handleChange = (e) => {
+    setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
     const formObjectData = {
-      first_name: firstname,
-      last_name: lastname,
-      email: email,
-      password: password,
-      mobile_no: mob,
-      address1: address1,
-      address2: address2,
-      city: city,
-      landmark: landmark,
-      pincode: +pincode,
+      first_name: user.firstname,
+      last_name: user.lastname,
+      email: user.email,
+      password: user.password,
+      mobile_no: user.mob,
+      address1: user.address1,
+      address2: user.address2,
+      city: user.city,
+      landmark: user.landmark,
+      pincode: +user.pincode,
       profileImage: file,
-      dob: date,
+      dob: user.date,
     };
     const formData = new FormData();
     for (let key in formObjectData) 
@@ -81,8 +87,9 @@ const Signup = () => {
                   id="outlined-basic1"
                   label="First Name"
                   placeholder="First Name"
+                  name='firstname'
                   variant="outlined"
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={handleChange}
                   fullWidth
                   required
                 />
@@ -91,8 +98,10 @@ const Signup = () => {
                 <TextField
                   id="outlined-basic2"
                   label="Last Name"
+                  
                   placeholder="Last Name"
-                  onChange={(e) => setLastName(e.target.value)}
+                  name='lastname'
+                  onChange={handleChange}
                   variant="outlined"
                   fullWidth
                   required
@@ -104,7 +113,8 @@ const Signup = () => {
                 id="outlined-basic3"
                 label="Email"
                 placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
+                name='email'
+                onChange={handleChange}
                 variant="outlined"
                 required
                 type="email"
@@ -116,7 +126,8 @@ const Signup = () => {
                 id="outlined-basic4"
                 label="password"
                 placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
+                name='password'
+                onChange={handleChange}
                 variant="outlined"
                 required
                 type="password"
@@ -128,7 +139,8 @@ const Signup = () => {
                 id="outlined-basic5"
                 label="Mobile-No"
                 placeholder="Mobile Number"
-                onChange={(e) => setMob(e.target.value)}
+                name='mob'
+                onChange={handleChange}
                 InputLabelProps={{ shrink: true }}
                 variant="outlined"
                 required
@@ -142,7 +154,8 @@ const Signup = () => {
                   id="outlined-basic6"
                   label="address1"
                   placeholder="Address1"
-                  onChange={(e) => setAddress1(e.target.value)}
+                  name='address1'
+                  onChange={handleChange}
                   variant="outlined"
                   fullWidth
                   required
@@ -152,7 +165,8 @@ const Signup = () => {
                 <TextField
                   id="outlined-basic7"
                   label="address2"
-                  onChange={(e) => setAddress2(e.target.value)}
+                  name='address2'
+                  onChange={handleChange}
                   placeholder="Address2"
                   variant="outlined"
                   fullWidth
@@ -166,7 +180,8 @@ const Signup = () => {
                   id="outlined-basic8"
                   label="Landmark"
                   placeholder="Landmark"
-                  onChange={(e) => setLandmark(e.target.value)}
+                  name='landmark'
+                  onChange={handleChange}
                   variant="outlined"
                   required
                 />
@@ -177,7 +192,8 @@ const Signup = () => {
                   id="outlined-basic9"
                   label="City"
                   placeholder="City"
-                  onChange={(e) => setCity(e.target.value)}
+                  name='city'
+                  onChange={handleChange}
                   variant="outlined"
                   required
                 />
@@ -187,7 +203,8 @@ const Signup = () => {
                   id="outlined-basic10"
                   label="Pincode"
                   placeholder="Pincode"
-                  onChange={(e) => setPincode(e.target.value)}
+                  name='pincode'
+                  onChange={handleChange}
                   type="number"
                   variant="outlined"
                   required
@@ -200,7 +217,8 @@ const Signup = () => {
                 label="DOB"
                 placeholder="DOB"
                 variant="outlined"
-                onChange={(e) => setDate(e.target.value)}
+                name='date'
+                onChange={handleChange}
                 required
                 type="date"
                 InputLabelProps={{ shrink: true }}

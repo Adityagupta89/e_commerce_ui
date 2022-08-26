@@ -31,13 +31,11 @@ const Cart = (props) => {
   );
 
   const orderHandler = () => {
-    console.log("Aditya")
-    console.log(typeof login , login)
     if (login !== true) {
       navigate("/login");
       return;
     }
-    
+
     try {
       products.forEach((element) => {
         createOrder(element);

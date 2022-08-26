@@ -54,7 +54,7 @@ const AddProduct = (props) => {
         .then((res) => res.json())
         .then((res) => setProduct(res));
     }
-  }, [ param.id, token,props.page]);
+  }, [param.id, token, props.page]);
 
   const submitHandler = (e) => {
     e.preventDefault();
